@@ -1,0 +1,20 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+use FriendsOfTYPO3\CrowdinBase\Command\SetupCommand;
+use DI\ContainerBuilder;
+use Symfony\Component\Console\Application;
+
+require __DIR__ . '/../vendor/autoload.php';
+
+$containerBuilder = new ContainerBuilder();
+$containerBuilder->addDefinitions(dirname(__DIR__) . '/config/container.php');
+$container = $containerBuilder->build();
+
+$application = new Application();
+$setupCommand = $container->get(SetupCommand::class);
+$application->add($setupCommand);
+$application->setDefaultCommand($setupCommand->getName(), true);
+$application->run();

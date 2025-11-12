@@ -1,0 +1,50 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 1
+
+      - name: Setup PHP with composer v2
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+
+      - name: Install dependencies
+        run: |
+          composer install --no-progress
+
+      - name: Run PHP linter
+        run: |
+          find . -type f -name '*.php' ! -path "./vendor/*" ! -path "./var/*" -print0 | xargs -0 -n1 -P4 php -l -n | (! grep -v "No syntax errors detected" )
+
+      - name: Verify PSR-4 namespace correctness
+        run: |
+          composer dumpautoload --optimize --strict-psr
+
+      - name: Normalize composer.json
+        run: |
+            composer normalize --dry-run
+
+      - name: Check coding standards
+        run: |
+          composer cs
+
+      - name: Run tests
+        run: |
+            composer tests
+
+      - name: Run static analysis
+        run: |
+          composer stan
+
+      - name: Run rector
+        run: |
+            composer rector-check

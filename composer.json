@@ -1,0 +1,73 @@
+{
+	"name": "friendsoftypo3/crowdin-base",
+	"description": "Base functionality for Crowdin",
+	"license": "proprietary",
+	"authors": [
+		{
+			"name": "TYPO3 Localization Team"
+		}
+	],
+	"require": {
+		"php": "^8.4",
+		"crowdin/crowdin-api-client": "^1.19",
+		"guzzlehttp/guzzle": "^7.10",
+		"php-di/php-di": "^7.1",
+		"symfony/console": "^7.3",
+		"vlucas/phpdotenv": "^5.6"
+	},
+	"require-dev": {
+		"ergebnis/composer-normalize": "~2.48.2",
+		"friendsofphp/php-cs-fixer": "~3.89.2",
+		"phpstan/phpstan": "2.1.32",
+		"phpunit/phpunit": "^12.4",
+		"rector/rector": "2.2.7"
+	},
+	"autoload": {
+		"psr-4": {
+			"FriendsOfTYPO3\\CrowdinBase\\": "src/"
+		}
+	},
+	"autoload-dev": {
+		"psr-4": {
+			"FriendsOfTYPO3\\CrowdinBase\\Tests\\": "tests/"
+		}
+	},
+	"bin": [
+		"bin/crowdinSetup"
+	],
+	"config": {
+		"allow-plugins": {
+			"ergebnis/composer-normalize": true
+		},
+		"platform": {
+			"php": "8.4"
+		},
+		"sort-packages": true
+	},
+	"scripts": {
+		"all": [
+			"@cs",
+			"@stan",
+			"@rector-check",
+			"@tests"
+		],
+		"cs": [
+			"./vendor/bin/php-cs-fixer fix -v --dry-run --config .php-cs-fixer.php"
+		],
+		"csfix": [
+			"./vendor/bin/php-cs-fixer fix --config .php-cs-fixer.php"
+		],
+		"rector": [
+			"./vendor/bin/rector"
+		],
+		"rector-check": [
+			"./vendor/bin/rector --dry-run"
+		],
+		"stan": [
+			"./vendor/bin/phpstan"
+		],
+		"tests": [
+			"./vendor/bin/phpunit"
+		]
+	}
+}
