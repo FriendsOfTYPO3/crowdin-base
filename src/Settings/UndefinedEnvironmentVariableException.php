@@ -10,7 +10,7 @@ final class UndefinedEnvironmentVariableException extends \DomainException
     {
         return new self(
             \sprintf(
-                'The environment variable "%s" is not defined in the .env file. Have a look into the .env.example file for more details.',
+                'The environment variable "%s" is not defined as environment variable (either in .env file or as environment variable). Have a look into the .env.example file for more details.',
                 $key,
             ),
             1762853210

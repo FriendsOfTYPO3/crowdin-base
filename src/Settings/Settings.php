@@ -10,11 +10,6 @@ namespace FriendsOfTYPO3\CrowdinBase\Settings;
  */
 final readonly class Settings
 {
-    private const array REQUIRED_ENV_KEYS = [
-        'CONFIGURATION_FILE',
-        'CROWDIN_ACCESS_TOKEN',
-    ];
-
     /**
      * @param list<non-empty-string> $skippedProjects
      */
@@ -30,9 +25,9 @@ final readonly class Settings
      */
     public static function fromEnvironment(array $env, array $skippedProjects, PathResolver $pathResolver): self
     {
-        foreach (self::REQUIRED_ENV_KEYS as $key) {
-            if (!isset($env[$key])) {
-                throw UndefinedEnvironmentVariableException::fromEnvironmentKey($key);
+        foreach (EnvironmentVariables::cases() as $variable) {
+            if (!isset($env[$variable->name])) {
+                throw UndefinedEnvironmentVariableException::fromEnvironmentKey($variable->name);
             }
         }
 

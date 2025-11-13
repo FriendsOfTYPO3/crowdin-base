@@ -19,7 +19,7 @@ final class UndefinedEnvironmentVariableExceptionTest extends TestCase
         $actual = UndefinedEnvironmentVariableException::fromEnvironmentKey('some-key');
 
         self::assertSame(
-            'The environment variable "some-key" is not defined in the .env file. Have a look into the .env.example file for more details.',
+            'The environment variable "some-key" is not defined as environment variable (either in .env file or as environment variable). Have a look into the .env.example file for more details.',
             $actual->getMessage(),
         );
         self::assertSame(1762853210, $actual->getCode());
