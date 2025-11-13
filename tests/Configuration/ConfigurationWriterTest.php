@@ -5,7 +5,6 @@ declare(strict_types=1);
 
 namespace FriendsOfTYPO3\CrowdinBase\Tests\Configuration;
 
-use _PHPStan_6597ef616\Nette\Utils\JsonException;
 use FriendsOfTYPO3\CrowdinBase\Configuration\Exception\ConfigurationFileWriteException;
 use FriendsOfTYPO3\CrowdinBase\Configuration\ConfigurationReader;
 use FriendsOfTYPO3\CrowdinBase\Configuration\ConfigurationWriter;
@@ -35,15 +34,15 @@ final class ConfigurationWriterTest extends TestCase
 
         self::assertCount(2, $actual);
 
-        self::assertSame(1, $actual[0]->id);
-        self::assertSame('typo3-extension-some-identifier', $actual[0]->identifier);
-        self::assertSame('news', $actual[0]->name);
-        self::assertSame(['de'], $actual[0]->languages);
+        self::assertSame(2, $actual[0]->id);
+        self::assertSame('typo3-extension-another-identifier', $actual[0]->identifier);
+        self::assertSame('tt_address', $actual[0]->name);
+        self::assertSame(['fr', 'it'], $actual[0]->languages);
 
-        self::assertSame(2, $actual[1]->id);
-        self::assertSame('typo3-extension-another-identifier', $actual[1]->identifier);
-        self::assertSame('tt_address', $actual[1]->name);
-        self::assertSame(['fr', 'it'], $actual[1]->languages);
+        self::assertSame(1, $actual[1]->id);
+        self::assertSame('typo3-extension-some-identifier', $actual[1]->identifier);
+        self::assertSame('news', $actual[1]->name);
+        self::assertSame(['de'], $actual[1]->languages);
 
         unlink($configurationFile);
     }

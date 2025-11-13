@@ -29,6 +29,7 @@ final readonly class ConfigurationWriter
      */
     public function write(array $projects): void
     {
+        usort($projects, static fn(Project $a, Project $b): int => $a->identifier <=> $b->identifier);
         $projectsAsArray = [];
         foreach ($projects as $project) {
             if (in_array($project->identifier, $this->skippedProjects, true)) {
