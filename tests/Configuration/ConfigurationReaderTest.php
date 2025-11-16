@@ -27,19 +27,29 @@ final class ConfigurationReaderTest extends TestCase
         self::assertSame('typo3-extension-news', $actual[0]->identifier);
         self::assertSame(368353, $actual[0]->id);
         self::assertSame('news', $actual[0]->name);
-        self::assertSame(["km", "pt-BR", "ro", "ru"], $actual[0]->languages);
+        self::assertSame('km', $actual[0]->languages[0]->id);
+        self::assertSame('Khmer', $actual[0]->languages[0]->name);
+        self::assertSame('pt-BR', $actual[0]->languages[1]->id);
+        self::assertSame('Portuguese, Brazilian', $actual[0]->languages[1]->name);
+        self::assertSame('ru', $actual[0]->languages[2]->id);
+        self::assertSame('Russian', $actual[0]->languages[2]->name);
 
         self::assertSame('typo3-cms', $actual[1]->identifier);
         self::assertSame(368815, $actual[1]->id);
         self::assertSame('typo3-cms', $actual[1]->name);
-        self::assertSame(["de", "el", "eo", "es-ES"], $actual[1]->languages);
+        self::assertSame('el', $actual[1]->languages[0]->id);
+        self::assertSame('Greek', $actual[1]->languages[0]->name);
+        self::assertSame('eo', $actual[1]->languages[1]->id);
+        self::assertSame('Esperanto', $actual[1]->languages[1]->name);
 
         self::assertSame('typo3-extension-ttaddress', $actual[2]->identifier);
         self::assertSame(369561, $actual[2]->id);
         self::assertSame('tt_address', $actual[2]->name);
-        self::assertSame(["pt-BR", "pt-PT", "ro", "sv-SE", "uk"], $actual[2]->languages);
+        self::assertSame('ro', $actual[2]->languages[0]->id);
+        self::assertSame('Romanian', $actual[2]->languages[0]->name);
+        self::assertSame('uk', $actual[2]->languages[1]->id);
+        self::assertSame('Ukrainian', $actual[2]->languages[1]->name);
     }
-
 
     #[Test]
     public function readWithNonExistentFileThrowsException(): void

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FriendsOfTYPO3\CrowdinBase\Configuration;
 
+use FriendsOfTYPO3\CrowdinBase\Configuration\Entity\Language;
 use FriendsOfTYPO3\CrowdinBase\Configuration\Entity\Project;
 use FriendsOfTYPO3\CrowdinBase\Configuration\Exception\InvalidConfigurationFileException;
 use FriendsOfTYPO3\CrowdinBase\Configuration\Exception\UnavailableConfigurationFileException;
@@ -39,7 +40,7 @@ final readonly class ConfigurationReader
              *     projects: array<non-empty-string, array{
              *         id: int,
              *         extensionKey: non-empty-string,
-             *         languages: list<non-empty-string>,
+             *         languages: list<Language>,
              *     }>
              * } $configuration
              */
@@ -54,11 +55,21 @@ final readonly class ConfigurationReader
 
         $projects = [];
         foreach ($configuration['projects'] as $identifier => $project) {
+            /**
+             * @var array{
+             *     id: int,
+             *     extensionKey: non-empty-string,
+             *     languages: list<array{id: non-empty-string, name: non-empty-string}>
+             * } $project
+             */
             $projects[] = new Project(
                 $project['id'],
                 $identifier,
                 $project['extensionKey'],
-                $project['languages'],
+                array_map(
+                    static fn(array $language): Language => new Language($language['id'], $language['name']),
+                    $project['languages']
+                ),
             );
         }
 

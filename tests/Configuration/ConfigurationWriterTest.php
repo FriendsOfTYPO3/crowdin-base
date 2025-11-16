@@ -5,11 +5,11 @@ declare(strict_types=1);
 
 namespace FriendsOfTYPO3\CrowdinBase\Tests\Configuration;
 
-use FriendsOfTYPO3\CrowdinBase\Configuration\Exception\ConfigurationFileWriteException;
-use FriendsOfTYPO3\CrowdinBase\Configuration\ConfigurationReader;
 use FriendsOfTYPO3\CrowdinBase\Configuration\ConfigurationWriter;
-use FriendsOfTYPO3\CrowdinBase\Configuration\Exception\InvalidConfigurationDataException;
+use FriendsOfTYPO3\CrowdinBase\Configuration\Entity\Language;
 use FriendsOfTYPO3\CrowdinBase\Configuration\Entity\Project;
+use FriendsOfTYPO3\CrowdinBase\Configuration\Exception\ConfigurationFileWriteException;
+use FriendsOfTYPO3\CrowdinBase\Configuration\Exception\InvalidConfigurationDataException;
 use FriendsOfTYPO3\CrowdinBase\Extension\ExtensionKeyGenerator;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
@@ -23,26 +23,24 @@ final class ConfigurationWriterTest extends TestCase
     {
         $configurationFile = '/tmp/crowdin-base-configuration-writer-test/' . uniqid();
         $projects = [
-            new Project(1, 'typo3-extension-some-identifier', 'typo3 extension news', ['de']),
-            new Project(2, 'typo3-extension-another-identifier', 'typo3 extension tt_address', ['fr', 'it']),
+            new Project(
+                1,
+                'typo3-extension-some-identifier',
+                'news',
+                [new Language('de', 'German')]
+            ),
+            new Project(
+                2,
+                'typo3-extension-another-identifier',
+                'typo3 extension tt_address',
+                [new Language('fr', 'French'), new Language('it', 'Italian')]
+            ),
         ];
         $subject = new ConfigurationWriter(new ExtensionKeyGenerator(), $configurationFile, []);
 
         $subject->write($projects);
-        $configurationReader = new ConfigurationReader($configurationFile);
-        $actual = $configurationReader->read();
 
-        self::assertCount(2, $actual);
-
-        self::assertSame(2, $actual[0]->id);
-        self::assertSame('typo3-extension-another-identifier', $actual[0]->identifier);
-        self::assertSame('tt_address', $actual[0]->name);
-        self::assertSame(['fr', 'it'], $actual[0]->languages);
-
-        self::assertSame(1, $actual[1]->id);
-        self::assertSame('typo3-extension-some-identifier', $actual[1]->identifier);
-        self::assertSame('news', $actual[1]->name);
-        self::assertSame(['de'], $actual[1]->languages);
+        self::assertJsonFileEqualsJsonFile(__DIR__ . '/Output/configuration.json', $configurationFile);
 
         unlink($configurationFile);
     }
@@ -52,17 +50,24 @@ final class ConfigurationWriterTest extends TestCase
     {
         $configurationFile = '/tmp/crowdin-base-configuration-writer-test/' . uniqid();
         $projects = [
-            new Project(1, 'typo3-extension-some-identifier', 'typo3 extension news', ['de']),
-            new Project(2, 'typo3-extension-another-identifier', 'typo3 extension tt_address', ['fr', 'it']),
+            new Project(
+                1,
+                'typo3-extension-some-identifier',
+                'news',
+                [new Language('de', 'German')]
+            ),
+            new Project(
+                2,
+                'typo3-extension-another-identifier',
+                'typo3 extension tt_address',
+                [new Language('fr', 'French'), new Language('it', 'Italian')]
+            ),
         ];
         $subject = new ConfigurationWriter(new ExtensionKeyGenerator(), $configurationFile, ['typo3-extension-some-identifier']);
 
         $subject->write($projects);
-        $configurationReader = new ConfigurationReader($configurationFile);
-        $actual = $configurationReader->read();
 
-        self::assertCount(1, $actual);
-        self::assertSame(2, $actual[0]->id);
+        self::assertJsonFileEqualsJsonFile(__DIR__ . '/Output/configuration-without-skipped.json', $configurationFile);
 
         unlink($configurationFile);
     }
@@ -74,7 +79,12 @@ final class ConfigurationWriterTest extends TestCase
 
         $configurationFile = '/tmp/crowdin-base-configuration-writer-test/' . uniqid();
         $projects = [
-            new Project(1, 'typo3-extension-some-identifier', "typo3 extension news\xB1\x31", ['de']),
+            new Project(
+                1,
+                'typo3-extension-some-identifier',
+                "typo3 extension news\xB1\x31",
+                [new Language('de', 'German')]
+            ),
         ];
         $subject = new ConfigurationWriter(new ExtensionKeyGenerator(), $configurationFile, []);
 
@@ -90,7 +100,12 @@ final class ConfigurationWriterTest extends TestCase
         mkdir(dirname($configurationFile));
         chmod(dirname($configurationFile), 0500);
         $projects = [
-            new Project(1, 'typo3-extension-some-identifier', "typo3 extension news", ['de']),
+            new Project(
+                1,
+                'typo3-extension-some-identifier',
+                'news',
+                [new Language('de', 'German')]
+            ),
         ];
 
         $subject = new ConfigurationWriter(new ExtensionKeyGenerator(), $configurationFile, []);

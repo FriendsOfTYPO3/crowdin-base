@@ -3,33 +3,48 @@
         "typo3-extension-news": {
             "id": 368353,
             "extensionKey": "news",
-            "languages": [
-                "km",
-                "pt-BR",
-                "ro",
-                "ru"
-            ]
+			"languages": [
+				{
+					"id": "km",
+					"name": "Khmer"
+				},
+				{
+					"id": "pt-BR",
+					"name": "Portuguese, Brazilian"
+				},
+				{
+					"id": "ru",
+					"name": "Russian"
+				}
+			]
         },
         "typo3-cms": {
             "id": 368815,
             "extensionKey": "typo3-cms",
-            "languages": [
-                "de",
-                "el",
-                "eo",
-                "es-ES"
-            ]
+			"languages": [
+				{
+					"id": "el",
+					"name": "Greek"
+				},
+				{
+					"id": "eo",
+					"name": "Esperanto"
+				}
+			]
         },
         "typo3-extension-ttaddress": {
             "id": 369561,
             "extensionKey": "tt_address",
-            "languages": [
-                "pt-BR",
-                "pt-PT",
-                "ro",
-                "sv-SE",
-                "uk"
-            ]
+			"languages": [
+				{
+					"id": "ro",
+					"name": "Romanian"
+				},
+				{
+					"id": "uk",
+					"name": "Ukrainian"
+				}
+			]
         }
     }
 }

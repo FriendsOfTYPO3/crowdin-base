@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FriendsOfTYPO3\CrowdinBase\Repository;
 
 use CrowdinApiClient\Crowdin;
+use FriendsOfTYPO3\CrowdinBase\Configuration\Entity\Language;
 use FriendsOfTYPO3\CrowdinBase\Configuration\Entity\Project;
 
 /**
@@ -36,7 +37,12 @@ final readonly class ProjectRepository
                 $item->getId(),
                 $item->getIdentifier(),
                 $item->getName(),
-                $languageIds,
+                array_values(
+                    array_map(
+                        static fn(array $targetLanguage): Language => new Language($targetLanguage['id'], $targetLanguage['name']),
+                        $item->getTargetLanguages()
+                    )
+                ),
             );
         }
 

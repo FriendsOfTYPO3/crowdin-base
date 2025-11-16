@@ -1,0 +1,18 @@
+{
+    "projects": {
+        "typo3-extension-another-identifier": {
+            "id": 2,
+            "extensionKey": "tt_address",
+            "languages": [
+                {
+                    "id": "fr",
+                    "name": "French"
+                },
+                {
+                    "id": "it",
+                    "name": "Italian"
+                }
+            ]
+        }
+    }
+}
