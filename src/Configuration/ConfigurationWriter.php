@@ -38,7 +38,7 @@ final readonly class ConfigurationWriter
 
             $projectsAsArray[$project->identifier] = [
                 'id' => $project->id,
-                'extensionKey' => $this->extensionKeyGenerator->generate($project->identifier, $project->name),
+                'extensionKey' => $this->extensionKeyGenerator->generate($project->identifier, $project->extensionKey),
                 'languages' => $project->languages,
             ];
         }
