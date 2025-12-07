@@ -15,6 +15,6 @@ $container = $containerBuilder->build();
 
 $application = new Application();
 $setupCommand = $container->get(SetupCommand::class);
-$application->add($setupCommand);
+$application->addCommand($setupCommand);
 $application->setDefaultCommand($setupCommand->getName(), true);
 $application->run();
