@@ -23,8 +23,12 @@ final class SettingsTest extends TestCase
         $this->pathResolverStub = self::createStub(PathResolver::class);
         $this->pathResolverStub
             ->method('getProjectPath')
-            ->with(dirname(dirname(__DIR__)) . '/src/Settings')
-            ->willReturn('/tmp');
+            ->willReturnMap([
+                [
+                    dirname(__DIR__, 2) . '/src/Settings',
+                    '/tmp',
+                ]
+            ]);
     }
 
     #[Test]
