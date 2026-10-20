@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FriendsOfTYPO3\CrowdinBase\Command;
 
 use FriendsOfTYPO3\CrowdinBase\Configuration\ConfigurationWriter;
+use FriendsOfTYPO3\CrowdinBase\Console\Output\ProjectOutput;
 use FriendsOfTYPO3\CrowdinBase\Repository\ProjectRepository;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -30,8 +31,11 @@ final class SetupCommand extends Command
         $io = new SymfonyStyle($input, $output);
 
         try {
+            $io->writeln('Retrieving projects from Crowdin ...');
             $projects = $this->repository->findAll();
-            $this->writer->write($projects);
+            $io->writeln('Retrieved projects from Crowdin successfully.');
+
+            $this->writer->write($projects, new ProjectOutput($io));
         } catch (\Throwable $t) {
             $io->error('An error occurred: ' . $t->getMessage());
             return Command::FAILURE;

@@ -7,6 +7,7 @@ namespace FriendsOfTYPO3\CrowdinBase\Configuration;
 use FriendsOfTYPO3\CrowdinBase\Configuration\Entity\Project;
 use FriendsOfTYPO3\CrowdinBase\Configuration\Exception\ConfigurationFileWriteException;
 use FriendsOfTYPO3\CrowdinBase\Configuration\Exception\InvalidConfigurationDataException;
+use FriendsOfTYPO3\CrowdinBase\Console\Output\OutputInterface;
 use FriendsOfTYPO3\CrowdinBase\Extension\ExtensionKeyGenerator;
 
 /**
@@ -27,12 +28,19 @@ final readonly class ConfigurationWriter
     /**
      * @param list<Project> $projects
      */
-    public function write(array $projects): void
+    public function write(array $projects, OutputInterface $output): void
     {
+        $output->start();
+
         usort($projects, static fn(Project $a, Project $b): int => $a->identifier <=> $b->identifier);
         $projectsAsArray = [];
+        $notes = [];
+        $errors = [];
         foreach ($projects as $project) {
+            $output->advance(\sprintf('Project "%s"', $project->extensionKey));
+
             if (in_array($project->identifier, $this->skippedProjects, true)) {
+                $notes[] = \sprintf('Project "%s" is skipped', $project->extensionKey);
                 continue;
             }
 
@@ -42,6 +50,8 @@ final readonly class ConfigurationWriter
                 'languages' => $project->languages,
             ];
         }
+
+        $output->finish($notes, $errors);
 
         try {
             $configurationAsJson = json_encode([

@@ -10,6 +10,8 @@ use FriendsOfTYPO3\CrowdinBase\Configuration\Entity\Language;
 use FriendsOfTYPO3\CrowdinBase\Configuration\Entity\Project;
 use FriendsOfTYPO3\CrowdinBase\Configuration\Exception\ConfigurationFileWriteException;
 use FriendsOfTYPO3\CrowdinBase\Configuration\Exception\InvalidConfigurationDataException;
+use FriendsOfTYPO3\CrowdinBase\Console\Output\OutputInterface;
+use FriendsOfTYPO3\CrowdinBase\Console\Output\ProjectOutput;
 use FriendsOfTYPO3\CrowdinBase\Extension\ExtensionKeyGenerator;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
@@ -18,6 +20,13 @@ use PHPUnit\Framework\TestCase;
 #[CoversClass(ConfigurationWriter::class)]
 final class ConfigurationWriterTest extends TestCase
 {
+    private OutputInterface $output;
+
+    protected function setUp(): void
+    {
+        $this->output = self::createStub(ProjectOutput::class);
+    }
+
     #[Test]
     public function writeCreatesConfigurationFileCorrectly(): void
     {
@@ -38,7 +47,7 @@ final class ConfigurationWriterTest extends TestCase
         ];
         $subject = new ConfigurationWriter(new ExtensionKeyGenerator(), $configurationFile, []);
 
-        $subject->write($projects);
+        $subject->write($projects, $this->output);
 
         self::assertJsonFileEqualsJsonFile(__DIR__ . '/Output/configuration.json', $configurationFile);
 
@@ -65,7 +74,7 @@ final class ConfigurationWriterTest extends TestCase
         ];
         $subject = new ConfigurationWriter(new ExtensionKeyGenerator(), $configurationFile, ['typo3-extension-some-identifier']);
 
-        $subject->write($projects);
+        $subject->write($projects, $this->output);
 
         self::assertJsonFileEqualsJsonFile(__DIR__ . '/Output/configuration-without-skipped.json', $configurationFile);
 
@@ -88,7 +97,7 @@ final class ConfigurationWriterTest extends TestCase
         ];
         $subject = new ConfigurationWriter(new ExtensionKeyGenerator(), $configurationFile, []);
 
-        $subject->write($projects);
+        $subject->write($projects, $this->output);
     }
 
     #[Test]
@@ -110,6 +119,6 @@ final class ConfigurationWriterTest extends TestCase
 
         $subject = new ConfigurationWriter(new ExtensionKeyGenerator(), $configurationFile, []);
 
-        $subject->write($projects);
+        $subject->write($projects, $this->output);
     }
 }
