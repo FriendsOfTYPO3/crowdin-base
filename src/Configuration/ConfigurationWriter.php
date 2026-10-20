@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace FriendsOfTYPO3\CrowdinBase\Configuration;
 
+use FriendsOfTYPO3\CrowdinBase\Configuration\Entity\Language;
 use FriendsOfTYPO3\CrowdinBase\Configuration\Entity\Project;
 use FriendsOfTYPO3\CrowdinBase\Configuration\Exception\ConfigurationFileWriteException;
 use FriendsOfTYPO3\CrowdinBase\Configuration\Exception\InvalidConfigurationDataException;
 use FriendsOfTYPO3\CrowdinBase\Console\Output\OutputInterface;
 use FriendsOfTYPO3\CrowdinBase\Extension\ExtensionKeyGenerator;
+use FriendsOfTYPO3\CrowdinBase\Language\SpecialLanguage;
 
 /**
  * Writes the configuration to the configured configuration file.
@@ -35,7 +37,7 @@ final readonly class ConfigurationWriter
         usort($projects, static fn(Project $a, Project $b): int => $a->identifier <=> $b->identifier);
         $projectsAsArray = [];
         $notes = [];
-        $errors = [];
+        $warnings = [];
         foreach ($projects as $project) {
             $output->advance(\sprintf('Project "%s"', $project->extensionKey));
 
@@ -44,14 +46,21 @@ final readonly class ConfigurationWriter
                 continue;
             }
 
+            $languages = $project->languages;
+            $inContextLanguage = array_find($languages, static fn(Language $language): bool => $language->id === SpecialLanguage::IN_CONTEXT->value);
+            if ($inContextLanguage !== null) {
+                $warnings[] = \sprintf('Project "%s" has in-context language configured', $project->extensionKey);
+                $languages = array_filter($languages, static fn(Language $language): bool => $language->id !== SpecialLanguage::IN_CONTEXT->value);
+            }
+
             $projectsAsArray[$project->identifier] = [
                 'id' => $project->id,
                 'extensionKey' => $this->extensionKeyGenerator->generate($project->identifier, $project->extensionKey),
-                'languages' => $project->languages,
+                'languages' => $languages,
             ];
         }
 
-        $output->finish($notes, $errors);
+        $output->finish($notes, $warnings);
 
         try {
             $configurationAsJson = json_encode([

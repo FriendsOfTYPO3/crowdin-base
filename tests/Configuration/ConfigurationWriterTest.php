@@ -82,6 +82,33 @@ final class ConfigurationWriterTest extends TestCase
     }
 
     #[Test]
+    public function writeCreatesConfigurationFileWithProjectDefinedInContextLanguageCorrectly(): void
+    {
+        $configurationFile = '/tmp/crowdin-base-configuration-writer-test/' . uniqid();
+        $projects = [
+            new Project(
+                1,
+                'typo3-extension-some-identifier',
+                'news',
+                [new Language('de', 'German'), new Language('t3', 'In-Context')]
+            ),
+            new Project(
+                2,
+                'typo3-extension-another-identifier',
+                'typo3 extension tt_address',
+                [new Language('fr', 'French'), new Language('it', 'Italian')]
+            ),
+        ];
+        $subject = new ConfigurationWriter(new ExtensionKeyGenerator(), $configurationFile, []);
+
+        $subject->write($projects, $this->output);
+
+        self::assertJsonFileEqualsJsonFile(__DIR__ . '/Output/configuration.json', $configurationFile);
+
+        unlink($configurationFile);
+    }
+
+    #[Test]
     public function writeThrowsErrorOnInvalidJson(): void
     {
         $this->expectException(InvalidConfigurationDataException::class);

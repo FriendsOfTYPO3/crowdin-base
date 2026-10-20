@@ -24,14 +24,14 @@ readonly class ProjectOutput implements OutputInterface
         $this->io->writeln(\sprintf('%d. %s', ++$count, $text));
     }
 
-    public function finish(array $notes, array $errors): void
+    public function finish(array $notes, array $warnings): void
     {
         foreach ($notes as $notice) {
             $this->io->note($notice);
         }
 
-        foreach ($errors as $error) {
-            $this->io->error($error);
+        foreach ($warnings as $warning) {
+            $this->io->warning($warning);
         }
     }
 }

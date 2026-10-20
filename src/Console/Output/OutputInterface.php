@@ -12,7 +12,7 @@ interface OutputInterface
 
     /**
      * @param list<string> $notes
-     * @param list<string> $errors
+     * @param list<string> $warnings
      */
-    public function finish(array $notes, array $errors): void;
+    public function finish(array $notes, array $warnings): void;
 }
