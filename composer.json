@@ -10,7 +10,7 @@
 	"require": {
 		"php": "^8.5",
 		"crowdin/crowdin-api-client": "^1.26",
-		"guzzlehttp/guzzle": "^7.16",
+		"guzzlehttp/guzzle": "^8.0",
 		"php-di/php-di": "^7.1",
 		"symfony/console": "^8.1",
 		"vlucas/phpdotenv": "^5.7"
